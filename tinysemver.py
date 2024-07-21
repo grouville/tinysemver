@@ -166,6 +166,8 @@ def create_tag(
     env = os.environ.copy()
     env["GIT_COMMITTER_NAME"] = user_name
     env["GIT_COMMITTER_EMAIL"] = user_email
+    env["GIT_AUTHOR_NAME"] = user_name
+    env["GIT_AUTHOR_EMAIL"] = user_email
     message = f"Release: {tag}"
     subprocess.run(["git", "add", "-A"], cwd=repository_path)
     subprocess.run(["git", "commit", "-m", message], cwd=repository_path, env=env)

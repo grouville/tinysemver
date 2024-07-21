@@ -82,7 +82,6 @@ runs:
       run: |
         cd $GITHUB_WORKSPACE
         echo "Current directory: $(pwd)"
-        echo "Repository: github.repository"
         echo "Contents of current directory:"
         ls -la
         echo "Running TinySemVer script:"

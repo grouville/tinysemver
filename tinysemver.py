@@ -180,6 +180,7 @@ def create_tag(
             assert github_repository and not github_token, "You can't provide the GitHub token without the repository"
             url = f"https://github.com/{github_repository}"
 
+        print(f"url constructed: git push {url} {new_commit_sha}:HEAD")
         # Pull the latest changes from the remote repository
         # pull_result = subprocess.run(["git", "pull", "--merge", url], cwd=repository_path, env=env)
         # if pull_result.returncode != 0:
@@ -188,10 +189,15 @@ def create_tag(
         # Push both commits and the tag
         push_result = subprocess.run(["git", "push", url, f"{new_commit_sha}:HEAD"], cwd=repository_path, env=env)
         if push_result.returncode != 0:
+            print(f"Push commit output: {push_result.stdout}")
+            print(f"Push commit error: {push_result.stderr}")
             raise RuntimeError("Failed to push the new commits to the remote repository")
 
+        print("push failed")
         push_result = subprocess.run(["git", "push", url, "--tag"], cwd=repository_path, env=env)
         if push_result.returncode != 0:
+            print(f"Push tag output: {push_result.stdout}")
+            print(f"Push tag error: {push_result.stderr}")
             raise RuntimeError("Failed to push the new tag to the remote repository")
         print(f"Pushed to: {url}")
 

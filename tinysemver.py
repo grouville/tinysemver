@@ -70,7 +70,7 @@ def get_last_tag(repository_path: PathLike) -> str:
 
 def get_commits_since_tag(repository_path: PathLike, tag: str) -> Tuple[List[str], List[str]]:
     result = subprocess.run(
-        ["git", "log", f"{tag}..HEAD", "--pretty=format:%h:%s"],
+        ["git", "log", f"{tag}..HEAD", "--no-merges", "--pretty=format:%h:%s"],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         cwd=repository_path,
@@ -118,6 +118,9 @@ def group_commits(
     patch_commits = []
 
     for commit in commits:
+        # Skip merge commits
+        if commit_starts_with_verb(commit, "merge"):
+            continue
         if any(commit_starts_with_verb(commit, verb) for verb in major_verbs):
             major_commits.append(commit)
         if any(commit_starts_with_verb(commit, verb) for verb in minor_verbs):

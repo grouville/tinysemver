@@ -466,7 +466,13 @@ def main():
         )
         args = parser.parse_args()
     else:
-        print("Running in GitHub Actions environment")
+        print("Running in GitHub Actions environment2")
+
+        print("Debug: Current working directory:", os.getcwd())
+        print("Debug: Contents of current directory:", os.listdir())
+        print("Debug: Environment variables:")
+        for key, value in os.environ.items():
+            print(f"  {key}: {value}")
          # Create a simple object to hold our arguments
         class Args:
             pass
@@ -474,10 +480,20 @@ def main():
         args.dry_run = os.environ.get('DRY_RUN', '').lower() == 'true'
         args.verbose = os.environ.get('VERBOSE', '').lower() == 'true'
         args.push = os.environ.get('PUSH', '').lower() == 'true'
-        args.major_verbs = os.environ.get('MAJOR_VERBS', 'breaking,break,major')
-        args.minor_verbs = os.environ.get('MINOR_VERBS', 'feature,minor,add,new')
-        args.patch_verbs = os.environ.get('PATCH_VERBS', 'fix,patch,bug,improve,docs')
+        print("Debug: Environment variables for verbs:")
+        print(f"  MAJOR_VERBS: '{os.environ.get('MAJOR_VERBS')}'")
+        print(f"  MINOR_VERBS: '{os.environ.get('MINOR_VERBS')}'")
+        print(f"  PATCH_VERBS: '{os.environ.get('PATCH_VERBS')}'")
+        
+        args.major_verbs = os.environ.get('MAJOR_VERBS') or 'breaking,break,major'
+        args.minor_verbs = os.environ.get('MINOR_VERBS') or 'feature,minor,add,new'
+        args.patch_verbs = os.environ.get('PATCH_VERBS') or 'fix,patch,bug,improve,docs'
         args.changelog_file = os.environ.get('CHANGELOG_FILE')
+        
+        print("Debug: Verb lists after assignment:")
+        print(f"  major_verbs: '{args.major_verbs}'")
+        print(f"  minor_verbs: '{args.minor_verbs}'")
+        print(f"  patch_verbs: '{args.patch_verbs}'")
         args.version_file = os.environ.get('VERSION_FILE')
         args.update_version_in = [tuple(item.split(',')) for item in os.environ.get('UPDATE_VERSION_IN', '').split(';') if item]
         args.update_major_version_in = [tuple(item.split(',')) for item in os.environ.get('UPDATE_MAJOR_VERSION_IN', '').split(';') if item]

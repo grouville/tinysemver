@@ -81,9 +81,14 @@ runs:
         GITHUB_TOKEN: ${{ inputs.github-token || github.token }}
       run: |
         cd $GITHUB_WORKSPACE
-        echo "Current directory: $(pwd)"
-        echo "Contents of current directory:"
+        echo "Debug: Current directory: $(pwd)"
+        echo "Debug: Contents of current directory:"
         ls -la
+        echo "Debug: Git status:"
+        git status
+        echo "Debug: Git log (last 5 commits):"
+        git log -n 5 --oneline
+        echo "Debug: Environment variables:"
+        env
         echo "Running TinySemVer script:"
-        echo "python ${{ github.action_path }}/tinysemver.py"
         python ${{ github.action_path }}/tinysemver.py

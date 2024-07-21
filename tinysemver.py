@@ -477,7 +477,7 @@ def main():
         args.update_major_version_in = [tuple(item.split(',')) for item in os.environ.get('UPDATE_MAJOR_VERSION_IN', '').split(';') if item]
         args.update_minor_version_in = [tuple(item.split(',')) for item in os.environ.get('UPDATE_MINOR_VERSION_IN', '').split(';') if item]
         args.update_patch_version_in = [tuple(item.split(',')) for item in os.environ.get('UPDATE_PATCH_VERSION_IN', '').split(';') if item]
-        args.path = os.environ.get('PATH')
+        args.path = os.environ.get('REPO_PATH')
         args.git_user_name = os.environ.get('GIT_USER_NAME', 'TinySemVer')
         args.git_user_email = os.environ.get('GIT_USER_EMAIL', 'tinysemver@ashvardanian.com')
         args.github_token = os.environ.get('GITHUB_TOKEN')

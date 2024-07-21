@@ -141,6 +141,17 @@ def bump_version(version: SemVer, bump_type: BumpType) -> SemVer:
         return major, minor, patch + 1
 
 
+def get_default_branch(repository_path: str) -> str:
+    """Get the default branch of the repository."""
+    result = subprocess.run(
+        ["git", "symbolic-ref", "refs/remotes/origin/HEAD"],
+        cwd=repository_path,
+        capture_output=True,
+        text=True,
+        check=True
+    )
+    return result.stdout.strip().split('/')[-1]
+
 def create_tag(
     *,  # enforce keyword-only arguments
     repository_path: PathLike,
@@ -186,8 +197,13 @@ def create_tag(
         # if pull_result.returncode != 0:
         #     raise RuntimeError("Failed to pull the latest changes from the remote repository")
 
+
+         # Get the default branch
+        default_branch = get_default_branch(repository_path)
+        print(f"Default branch: {default_branch}")
+
         # Push both commits and the tag
-        push_result = subprocess.run(["git", "push", url, f"{new_commit_sha}:HEAD"], cwd=repository_path, env=env)
+        push_result = subprocess.run(["git", "push", url, f"{new_commit_sha}:refs/heads/{default_branch}"], cwd=repository_path, env=env)
         if push_result.returncode != 0:
             print(f"Push commit output: {push_result.stdout}")
             print(f"Push commit error: {push_result.stderr}")

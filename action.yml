@@ -85,4 +85,5 @@ runs:
         echo "Contents of current directory:"
         ls -la
         echo "Running TinySemVer script:"
+        echo "python ${{ github.action_path }}/tinysemver.py"
         python ${{ github.action_path }}/tinysemver.py

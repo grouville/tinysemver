@@ -371,7 +371,9 @@ def bump(
 
 
 def main():
+    print("Starting main function")
     if 'GITHUB_ACTIONS' not in os.environ:
+        print("Running in local environment")
         parser = argparse.ArgumentParser(description="Tiny Semantic Versioning tool")
         parser.add_argument(
             "--dry-run",
@@ -464,6 +466,7 @@ def main():
         )
         args = parser.parse_args()
     else:
+        print("Running in GitHub Actions environment")
          # Create a simple object to hold our arguments
         class Args:
             pass
@@ -485,6 +488,12 @@ def main():
         args.git_user_email = os.environ.get('GIT_USER_EMAIL', 'tinysemver@ashvardanian.com')
         args.github_token = os.environ.get('GITHUB_TOKEN')
         args.github_repository = os.environ.get('GITHUB_REPOSITORY')
+
+    # Print out the arguments
+    print("Arguments:")
+    for arg, value in vars(args).items():
+        print(f"{arg}: {value}")
+
 
     try:
         bump(

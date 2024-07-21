@@ -471,9 +471,9 @@ def main():
         args.dry_run = os.environ.get('DRY_RUN', '').lower() == 'true'
         args.verbose = os.environ.get('VERBOSE', '').lower() == 'true'
         args.push = os.environ.get('PUSH', '').lower() == 'true'
-        args.major_verbs = os.environ.get('MAJOR_VERBS')
-        args.minor_verbs = os.environ.get('MINOR_VERBS')
-        args.patch_verbs = os.environ.get('PATCH_VERBS')
+        args.major_verbs = os.environ.get('MAJOR_VERBS', 'breaking,break,major')
+        args.minor_verbs = os.environ.get('MINOR_VERBS', 'feature,minor,add,new')
+        args.patch_verbs = os.environ.get('PATCH_VERBS', 'fix,patch,bug,improve,docs')
         args.changelog_file = os.environ.get('CHANGELOG_FILE')
         args.version_file = os.environ.get('VERSION_FILE')
         args.update_version_in = [tuple(item.split(',')) for item in os.environ.get('UPDATE_VERSION_IN', '').split(';') if item]

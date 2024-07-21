@@ -9,6 +9,8 @@ jobs:
     # Add this condition to skip recursive releases
     if: "!contains(github.event.head_commit.message, 'Release')"
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     name: Update Version
     steps:
     - uses: actions/checkout@v4

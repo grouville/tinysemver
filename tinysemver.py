@@ -158,7 +158,17 @@ def create_tag(
     message = f"Release: {tag}"
     subprocess.run(["git", "add", "-A"], cwd=repository_path)
     subprocess.run(["git", "commit", "-m", message], cwd=repository_path, env=env)
-    subprocess.run(["git", "tag", "-a", tag, "-m", message], cwd=repository_path, env=env)
+    
+     # Get the SHA of the new commit
+    new_commit_sha = subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        cwd=repository_path,
+        capture_output=True,
+        text=True,
+        check=True
+    ).stdout.strip()
+    
+    subprocess.run(["git", "tag", "-a", tag, "-m", message, new_commit_sha], cwd=repository_path, env=env)
     print(f"Created new tag: {tag}")
     if push:
         url = None
@@ -176,7 +186,7 @@ def create_tag(
         #     raise RuntimeError("Failed to pull the latest changes from the remote repository")
 
         # Push both commits and the tag
-        push_result = subprocess.run(["git", "push", url], cwd=repository_path, env=env)
+        push_result = subprocess.run(["git", "push", url, f"{new_commit_sha}:HEAD"], cwd=repository_path, env=env)
         if push_result.returncode != 0:
             raise RuntimeError("Failed to push the new commits to the remote repository")
 

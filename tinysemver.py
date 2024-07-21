@@ -466,7 +466,7 @@ def main():
         )
         args = parser.parse_args()
     else:
-        print("Running in GitHub Actions environment2")
+        print("Running in GitHub Actions environment3")
 
         print("Debug: Current working directory:", os.getcwd())
         print("Debug: Contents of current directory:", os.listdir())

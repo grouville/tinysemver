@@ -46,7 +46,8 @@ Setting up a new project:
 import argparse
 import subprocess
 import re
-import requests
+from urllib import request, error
+import json
 import os
 from typing import List, Tuple, Literal, Union, Optional
 from datetime import datetime
@@ -149,12 +150,17 @@ def get_default_branch(github_token, repo_owner, repo_name):
         "Authorization": f"token {github_token}",
         "Accept": "application/vnd.github.v3+json"
     }
-    response = requests.get(url, headers=headers)
-    if response.status_code == 200:
-        return response.json()["default_branch"]
-    else:
-        raise Exception(f"Failed to get default branch: {response.status_code}, {response.text}")
-
+    
+    try:
+        req = request.Request(url, headers=headers)
+        with request.urlopen(req) as response:
+            if response.status == 200:
+                data = json.loads(response.read().decode())
+                return data["default_branch"]
+            else:
+                raise Exception(f"Failed to get default branch: {response.status}, {response.read().decode()}")
+    except error.URLError as e:
+        raise Exception(f"Failed to connect to GitHub API: {str(e)}")
 
 def create_tag(
     *,  # enforce keyword-only arguments

@@ -188,13 +188,13 @@ def create_tag(
         #     raise RuntimeError("Failed to pull the latest changes from the remote repository")
 
         # Push both commits and the tag
-        push_result = subprocess.run(["git", "push", url, f"{new_commit_sha}:refs/remote/origin/main"], cwd=repository_path, env=env)
+        push_result = subprocess.run(["git", "push", url, f"{new_commit_sha}:main"], cwd=repository_path, env=env)
         if push_result.returncode != 0:
             print(f"Push commit output: {push_result.stdout}")
             print(f"Push commit error: {push_result.stderr}")
             raise RuntimeError("Failed to push the new commits to the remote repository")
 
-        print("push failed")
+        print("push succeeded")
         push_result = subprocess.run(["git", "push", url, "--tag"], cwd=repository_path, env=env)
         if push_result.returncode != 0:
             print(f"Push tag output: {push_result.stdout}")

@@ -113,3 +113,29 @@
 ### Patch
 
 - Docs: Fix project name
+
+## July 22, 2024: v1.2.11
+
+### Patch
+
+- fix: push on main directly
+- fix: default branch as a param
+- fix: rely on urllib from stdlib
+- fix: push proper git tag
+- fix: action tmate for git context debug
+- fix: push properly new commit
+- fix: toto
+- fix: commit exclusion
+- fix: push release on ci context
+- fix: major / minor / patch verbs
+- fix: debug more
+- fix: debug more
+- fix: add debug
+- fix: add default major - minor - patch verbs on CI
+- fix: skip merge commits
+- Fix: test
+- fix: trigger CI
+- fix: update action env passing
+- fix: pass correct env vars
+- fix: initialize Args in Action context
+- fix: github action

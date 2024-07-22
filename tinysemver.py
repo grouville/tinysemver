@@ -46,6 +46,7 @@ Setting up a new project:
 import argparse
 import subprocess
 import re
+import requests
 import os
 from typing import List, Tuple, Literal, Union, Optional
 from datetime import datetime
@@ -141,16 +142,19 @@ def bump_version(version: SemVer, bump_type: BumpType) -> SemVer:
         return major, minor, patch + 1
 
 
-def get_default_branch(repository_path: str) -> str:
-    """Get the default branch of the repository."""
-    result = subprocess.run(
-        ["git", "symbolic-ref", "refs/remotes/origin/HEAD"],
-        cwd=repository_path,
-        capture_output=True,
-        text=True,
-        check=True
-    )
-    return result.stdout.strip().split('/')[-1]
+
+def get_default_branch(github_token, repo_owner, repo_name):
+    url = f"https://api.github.com/repos/{repo_owner}/{repo_name}"
+    headers = {
+        "Authorization": f"token {github_token}",
+        "Accept": "application/vnd.github.v3+json"
+    }
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200:
+        return response.json()["default_branch"]
+    else:
+        raise Exception(f"Failed to get default branch: {response.status_code}, {response.text}")
+
 
 def create_tag(
     *,  # enforce keyword-only arguments
@@ -201,11 +205,11 @@ def create_tag(
 
 
          # Get the default branch
-        default_branch = get_default_branch(repository_path)
+        default_branch = get_default_branch(get_default_branch, github_repository.split("/")[0], github_repository.split("/")[1])
         print(f"Default branch: {default_branch}")
 
         # Push both commits and the tag
-        push_result = subprocess.run(["git", "push", url, f"{new_commit_sha}:refs/heads/{default_branch}"], cwd=repository_path, env=env)
+        push_result = subprocess.run(["git", "push", url, f"{new_commit_sha}:refs/remote/origin/{default_branch}"], cwd=repository_path, env=env)
         if push_result.returncode != 0:
             print(f"Push commit output: {push_result.stdout}")
             print(f"Push commit error: {push_result.stderr}")

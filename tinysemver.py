@@ -46,8 +46,6 @@ Setting up a new project:
 import argparse
 import subprocess
 import re
-from urllib import request, error
-import json
 import os
 from typing import List, Tuple, Literal, Union, Optional
 from datetime import datetime
@@ -142,26 +140,6 @@ def bump_version(version: SemVer, bump_type: BumpType) -> SemVer:
     elif bump_type == "patch":
         return major, minor, patch + 1
 
-
-
-def get_default_branch(github_token, repo_owner, repo_name):
-    url = f"https://api.github.com/repos/{repo_owner}/{repo_name}"
-    headers = {
-        "Authorization": f"token {github_token}",
-        "Accept": "application/vnd.github.v3+json"
-    }
-    
-    try:
-        req = request.Request(url, headers=headers)
-        with request.urlopen(req) as response:
-            if response.status == 200:
-                data = json.loads(response.read().decode())
-                return data["default_branch"]
-            else:
-                raise Exception(f"Failed to get default branch: {response.status}, {response.read().decode()}")
-    except error.URLError as e:
-        raise Exception(f"Failed to connect to GitHub API: {str(e)}")
-
 def create_tag(
     *,  # enforce keyword-only arguments
     repository_path: PathLike,
@@ -209,13 +187,8 @@ def create_tag(
         # if pull_result.returncode != 0:
         #     raise RuntimeError("Failed to pull the latest changes from the remote repository")
 
-
-         # Get the default branch
-        default_branch = get_default_branch(get_default_branch, github_repository.split("/")[0], github_repository.split("/")[1])
-        print(f"Default branch: {default_branch}")
-
         # Push both commits and the tag
-        push_result = subprocess.run(["git", "push", url, f"{new_commit_sha}:refs/remote/origin/{default_branch}"], cwd=repository_path, env=env)
+        push_result = subprocess.run(["git", "push", url, f"{new_commit_sha}:refs/remote/origin/main"], cwd=repository_path, env=env)
         if push_result.returncode != 0:
             print(f"Push commit output: {push_result.stdout}")
             print(f"Push commit error: {push_result.stderr}")

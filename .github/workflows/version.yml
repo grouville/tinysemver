@@ -19,8 +19,8 @@ jobs:
     - name: Print Environment Variables
       run: |
         env
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
+    # - name: Setup tmate session
+    #   uses: mxschmitt/action-tmate@v3
     - name: Run TinySemVer
       uses: ./  # This uses the action defined in the current repository
       with:
